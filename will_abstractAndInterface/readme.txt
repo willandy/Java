@@ -1,0 +1,3 @@
+接口是一种约定，设计时不考虑具体实现；（will_abstractAndInterface-InkTest）
+抽象类:（will_abstractAndInterface-AbstractMethod）
+接口:(will_abstractAndInterface-InterfaceMethod/InterfaceMethodTwo)
