@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>will_springmvc</display-name>
+  
+  <!-- 处理字符编码的filter -->
+  <filter>
+     <filter-name>encodingFilter</filter-name>
+     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+     <init-param>
+       <param-name>encoding</param-name>
+       <param-value>UTF-8</param-value>
+     </init-param>
+  </filter>
+  <filter-mapping>
+     <filter-name>encodingFilter</filter-name>
+     <url-pattern>/*</url-pattern><!-- 对所有的中文乱码过滤 -->
+  </filter-mapping>
+  
+  <servlet>
+    <servlet-name>welcome</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <!-- 配置资源文件 -->
+    <init-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>classpath:welcome-servlet.xml</param-value>
+    </init-param>
+    <!-- servlet配置文件启动的优先顺序，写大于0的正整数，越小越优先，如果是负数就会选择性加载 -->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <!-- 值得注意的是：这里如果取什么名字，那么接下来建servlet的配置文件时就要以
+    该名字开口，并加上"-servlet.xml"，即如果取得是welcome，那么配置文件的名字就是
+    welcome-servlet.xml，这个新建的servlet配置文件就是上面load-on-startup优先加载的
+    配置文件
+     -->
+    <servlet-name>welcome</servlet-name>
+    <!-- 这里写根目录，是指根目录下所有请求都被DispatcherServlet所拦截 -->
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+</web-app>

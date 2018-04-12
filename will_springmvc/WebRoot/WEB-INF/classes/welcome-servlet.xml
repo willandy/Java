@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+     <!-- springmvc默认就是BeanNameUrlHandlerMapping -->
+     <!-- <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/> -->
+
+    <!-- 配置bean name，相当于一个url，找到对应的control(通过bean的name，完成url映射) -->
+    <!-- beanname的缺点是，一个beanname只能有一个controllerr，每个controller
+    只有一个默认的modelAndView，如果多种业务，会有多个controller
+     -->
+  <!--   <bean name="/welcome" class="com.will.springmvc.WelcomeController"></bean> -->
+
+<!-- 以上是通过beanname的方式来实现映射（已弃用，但便于理解springmvc流程），下面是用注解的方式 -->
+
+   <!-- 以下采用annotation方式，完成映射 -->
+   <!-- 让spring扫描包下的所有类，让标注spring注解的类生效 -->
+   <!-- com.will.controller就是controller包 -->
+   <context:component-scan base-package="com.will.controller"></context:component-scan>
+   <!-- springmvc注解驱动 -->
+   <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!-- 试图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+   <!-- 全局变量SimpleMappingExceptionResolve -->
+   <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+            <!-- 将类名，映射为视图名 -->
+                <prop key="com.will.exception.UserException">error</prop>
+                <!-- 如果有其他类也是异常类，也可以加进去 -->
+                <!-- <prop key=""></prop> -->
+            </props>
+        </property>
+   </bean>
+
+<!-- 配置静态资源文件访问，springMVC无法直接访问静态文件，需要映射成URL路径来进行访问 -->
+<!-- mapping="/statics/**":指的是statics下的所有文件，包括子文件里的所有资源 -->
+  <mvc:resources location="/statics/" mapping="/statics/**"></mvc:resources>
+
+ <!-- 配置文件上传 MultiPartResolver -->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+       <property name="maxUploadSize" value="5000000"></property>
+  </bean>
+
+
+</beans>
