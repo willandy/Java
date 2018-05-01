@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+	
+	
+	<bean>
+	  <property name="dao">
+	     <ref bean="testDao"/>
+	  </property>
+	  
+	  <property name="xx">
+	     <list>
+	     <!-- list注入，如果存的是string类型 -->
+	       <value>a</value>
+	       <value>b</value>
+	       <value>c</value>
+	       <value>d</value>
+	       <!-- list注入，如果存的是对象，就可以加bean，也可以是<ref>，然后
+	       list的子元素里还有对象，也还可以写bean -->
+	       <bean></bean>
+	     </list>
+	  </property>
+	  
+	  
+	  <!-- set -->
+	  <property name="xx">
+	     <set>
+	       <bean></bean>
+	       <value></value>
+	       <ref/>
+	     </set>
+	  </property>
+	  
+	  <property name="xx">
+	    <map>
+	    <!-- 如果有几个entry，就遍历里面的内容 -->
+	      <entry key="0">
+	        <value></value>
+	      </entry>
+	      <entry key="1">
+	        <value></value>
+	      </entry>
+	      <entry key="2">
+	      <!-- 外部引用的bean -->
+	        <ref/>
+	      </entry>
+	      <!-- 也有可能使用bean作为hashmap的key值 -->
+	      <entry key-ref="beanId">
+	      <!-- 外部引用的bean -->
+	        <ref/>
+	      </entry>
+	    </map>
+	  </property>
+	  
+	  <!-- properties：多用于读取配置文件 -->
+	  <property name="xx">
+	    <props>
+	      <prop key="url">连接字符串</prop>
+	      <prop key="driverClass">驱动类</prop>
+	    </props>
+	  </property>
+	  
+	  
+	  <property name="xx">
+	    <null></null>
+	  </property>
+	  
+	  
+	  
+	</bean>
+	
+	</beans>

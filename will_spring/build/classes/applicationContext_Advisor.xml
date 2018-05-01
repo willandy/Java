@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+  <bean id="dao" class="dao.NewDao"></bean>
+  
+  <bean id="testBiz" class="biz.TestBiz" autowire="byType"/>
+
+<!-- 现在采用advisor方法来 -->
+<!-- 前置 -->
+<bean id="beforeLogger" class="advisor.BeforeLogger"></bean>
+<!-- 后置 -->
+<bean id="afterLogger" class="advisor.AfterLogger"></bean>
+<!-- 环绕 -->
+<bean id="aroundLogger" class="advisor.AroundLogger"></bean>
+<!-- 异常 -->
+<bean id="afterThrowingLogger" class="advisor.AfterThrowingLogger"></bean>
+
+<aop:config proxy-target-class="true">
+    
+   <aop:pointcut expression="execution(public * biz..*(..))" id="pointcut"/>
+    <!-- 传统的advisor和后期的增强方法的区别：①传统的和现在的不能同时使用
+    ②现在的增强除了要给出是哪个增强类外，还需说明是那个增强方法，而传统的不需要，因为就一个接口，
+    接口在创建时就确定了是前置还是后置
+    ③现在的增强通过标签名字来判定，如after，before等，而不是通过方法名，如beforeLogger，
+    而传统的是通过接口，因为是接口实现，实现接口时就确定了方位 -->
+    <!-- <aop:advisor advice-ref="beforeLogger"
+    pointcut-ref="pointcut"/>
+    <aop:advisor advice-ref="afterLogger"
+    pointcut-ref="pointcut"/> -->
+    <aop:advisor advice-ref="aroundLogger"
+    pointcut-ref="pointcut"/>
+    <aop:advisor advice-ref="afterThrowingLogger"
+    pointcut-ref="pointcut"/>
+</aop:config> 
+
+</beans>

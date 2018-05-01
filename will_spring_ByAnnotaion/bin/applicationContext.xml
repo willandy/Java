@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+ <!-- 这里与另一个spring项目分开，这里用来实现注解方式 -->
+  <!-- 这句话是告诉spring，配制方法已经不在xml里，然后告诉它去哪里找 -->
+  <!-- biz,dao  多个包可以用逗号隔开 -->
+  <context:component-scan base-package="biz,dao"></context:component-scan>
+
+<!-- 创建增强方法的bean，然后spring就会扫描里面的注解 -->
+  <bean class="logger.TestLogger"></bean>
+<!-- 使用aspect自动注释功能，然后根据上面的增强方法，实现织入 -->
+<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+</beans>

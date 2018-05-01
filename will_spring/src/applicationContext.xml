@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+<!-- spring里所有的bean就是组件，IOC为装配，把组件装配在一起 -->
+<!-- 这就相当于创建了一个对象，现在spring就代替了工厂 -->
+<!-- Xxx testDao=new dao.TestDao(),就类似于下面这句话的内容 -->
+  <bean id="testDao" class="dao.NewDao"></bean>
+  <!-- 如果要用名称匹配，上面就需要把id="testDao"改成id="dao" -->
+  <bean id="dao" class="dao.NewDao"></bean>
+  
+  <!-- Xxx testBiz=new dao.TestBiz(),就类似于下面这句话的内容 -->
+  <!-- 目标对象 -->
+  
+  <!-- <bean id="testBiz" class="biz.TestBiz" p:key="123" p:name="test">P命名直接赋值 -->
+ <!--  <bean id="testBiz" class="biz.TestBiz" p:dao-ref="testDao">P命名引用对象 -->
+ <!-- 加autowire="byType"，如果一个类里面有多个dao需要赋值，就可以省略很多代码 -->
+  <!-- <bean id="testBiz" class="biz.TestBiz" autowire="byType"> -->
+  <!-- byName要按名称匹配 -->
+  <bean id="testBiz" class="biz.TestBiz" autowire="byName">
+  <!-- 除了要创建业务对象外，还要赋值，这里就是赋值给dao，这里的dao
+  就是业务层里ITestDao dao里面的dao，所以代码中名字也要合乎规范，符合
+  封装原则,如果TestBiz中关于setDao的名字成了setDaoTest,那么下面的dao就要
+  变成daoTest -->
+   <!--  <property name="dao">
+    testBiz.setDao(testDao)
+       <ref bean="testDao"/>
+    </property> -->
+    <!-- 接下来跟上面的不同，上面是根据设值注入，下面是构造注入,对应业务层中编写的构造方法 -->
+    <!-- 这里加入index，是为了区分前面业务层里的不同构造方法，表示第一个参数是dao，第二个是string -->
+     <!-- 构造注入的就注意有多少个参数，就写几个constructor-arg，区别就是type -->
+   <!--  <constructor-arg index="0">
+      <ref bean="testDao"/>
+    </constructor-arg>
+    这里配置两个constructor的意思是，调用双参构造，一个是dao类型，一个是string类型
+    <constructor-arg type="java.lang.String" index="1">
+       <value>122332</value>
+    </constructor-arg> -->
+  </bean>
+
+<!-- 创建一个logger对象 -->
+<!-- 增强方法 -->
+<bean id="testLogger" class="logger.TestLogger"></bean>
+
+<aop:config proxy-target-class="true">
+<!-- biz包下及其子包下所有方法，不限参数的public
+这里明确需要增强的对象，确定范围
+切入点，切入点表达式，符合表达式的方法可以被织入增强处理 -->
+   <aop:pointcut expression="execution(public * biz..*(..))" id="pointcut"/>
+   <!-- 这里就是具体的织入过程，目标确定后，就是增强，引用id定义的testLogger类，调用里面的
+   beforeLogger方法，在目标对象前面增强，然后引入目标对象 -->
+   <aop:aspect ref="testLogger">
+  <!--   
+       <aop:before method="beforeLogger" pointcut-ref="pointcut"/>
+       增强后面的方法
+       <aop:after-returning method="afterReturningLogger" pointcut-ref="pointcut"
+       returning="result"/>把返回值传给加result的参数，就是前面增强方法里后置增强方法里的result参数
+    -->
+    <!-- 采用环绕的方法，将增强方法织入到目标对象上 -->
+       <!-- <aop:around method="around" pointcut-ref="pointcut"/> -->
+    <!-- 采用环绕的方法，将增强方法织入到目标对象上 -->
+       <!-- <aop:after-throwing method="afterThrowing"
+        pointcut-ref="pointcut" throwing="e"/> --><!-- 这里的e对象前面异常增强方法里Exception的
+                     参数e，前面写什么，这里就写什么 -->
+     <!-- 最终增强方法 -->
+       <aop:after method="after" pointcut-ref="pointcut"/>
+   </aop:aspect>
+</aop:config> 
+
+</beans>
